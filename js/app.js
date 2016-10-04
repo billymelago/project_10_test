@@ -11,92 +11,92 @@ $(document).ready(function() {
    
     // the AJAX part 
     var f = 1; 
-    var flickerAPI = 'https://swapi.co/api/planets/?page=' + f;
-    var animal = $('#search').val();
-    var flickrOptions = {
-        search: animal
+    var planetAPI = 'https://swapi.co/api/planets/?page=' + f;
+    var planet_search = $('#search').val();
+    var planetOptions = {
+        search: planet_search
     };
-     console.log(flickerAPI);
-    function displayPhotos(data) {
-      var photoHTML = '<ul>';
+     console.log(planetAPI);
+    function displayPlanets(data) {
+      var planetHTML = '<ul>';
       $.each(data.results,function(i,planet) {
-        photoHTML += '<li class="">';
-        photoHTML += '<p class="image">' + planet.name + '</p>';
-        photoHTML += '<p>Terrain: ' + planet.terrain + '</p>';  
-        photoHTML += '<p>' + planet.population + '</p></li>';
+        planetHTML += '<li class="">';
+        planetHTML += '<p class="image">' + planet.name + '</p>';
+        planetHTML += '<p>Terrain: ' + planet.terrain + '</p>';  
+        planetHTML += '<p>' + planet.population + '</p></li>';
           
         if(planet.films.length > 0) {
             var movieAPI = planet.films;
             
-            function displayMovies(movie_data) {
-                photoHTML += '<h6>Movie Apperances</h6>';
-                photoHTML += '<ul>';
-                $.each(movie_data, function(i,movies) {
-                    photoHTML += '<li>' + movies.title + '</li>';
+           // function displayMovies(movie_data) {
+                planetHTML += '<h6>Movie Apperances</h6>';
+                planetHTML += '<ul>';
+                $.each(planet.films, function(i,movies) {
+                    planetHTML += '<li>' + movies.opening_crawl + '</li>';
                     
-                    console.log(movies);
+                    console.log(movies.title);
                 }); //end each movies
-                photoHTML += '</ul>';
-                $('#photos').html(photoHTML);
-            }; //end displayMovies() 
+                planetHTML += '</ul>';
+                $('#planets').html(planetHTML);
+           // }; //end displayMovies() 
         } else {
             console.log('No info here!');
         }
-        $.getJSON(movieAPI, flickrOptions, displayMovies);
+       // $.getJSON(movieAPI, planetOptions, displayMovies);
           
       }); // end each planets
             
-      photoHTML += '</ul>';
-      $('#photos').html(photoHTML);
+      planetHTML += '</ul>';
+      $('#planets').html(planetHTML);
       $searchField.prop('disabled', false);
       $submitButton.attr('disabled', false).val('Search');
-    }; //end displayPhotos() 
-    $.getJSON(flickerAPI, flickrOptions, displayPhotos);
+    }; //end displayPlanets() 
+    $.getJSON(planetAPI, planetOptions, displayPlanets);
 
      $('#next').click(function() {
         if(f < 7) {
-            $('#photos').html();
+            $('#planets').html();
             f++;
             var nextPage = 'https://swapi.co/api/planets/?page=' + f;
             function displayNextPage(response) {
-              var photoHTML = '<h3>Planet Page ' + f + '</h3><ul>';
+              var planetHtml = '<h3>Planet Page ' + f + '</h3><ul>';
               $.each(response.results,function(i,planet) {
-                photoHTML += '<li class="">';
-                photoHTML += '<p class="image">' + planet.name + '</p>';
-                photoHTML += '<p>Terrain: ' + planet.terrain + '</p>';  
-                photoHTML += '<p>' + planet.population + '</p></li>';
+                planetHtml += '<li class="">';
+                planetHtml += '<p class="image">' + planet.name + '</p>';
+                planetHtml += '<p>Terrain: ' + planet.terrain + '</p>';  
+                planetHtml += '<p>' + planet.population + '</p></li>';
                  }); // end each planets
             
-              photoHTML += '</ul>';
-              $('#photos').html(photoHTML);
+              planetHtml += '</ul>';
+              $('#planets').html(planetHtml);
               $searchField.prop('disabled', false);
               $submitButton.attr('disabled', false).val('Search');  
             }; //end displatNextPage
-            $.getJSON(nextPage, flickrOptions, displayNextPage);
+            $.getJSON(nextPage, planetOptions, displayNextPage);
         }
     }); //end button next
 
      
     $('#prev').click(function() {
         if(f > 1) {
-            $('#photos').html();
+            $('#planets').html();
             f--;
             var nextPage = 'https://swapi.co/api/planets/?page=' + f;
             function displayNextPage(response) {
-              var photoHTML = '<h3>Planet Page ' + f + '</h3><ul>';
+              var planetHTML = '<h3>Planet Page ' + f + '</h3><ul>';
               $.each(response.results,function(i,planet) {
-                photoHTML += '<li class="">';
-                photoHTML += '<p class="image">' + planet.name + '</p>';
-                photoHTML += '<p>Terrain: ' + planet.terrain + '</p>';  
-                photoHTML += '<p>' + planet.population + '</p></li>';
+                planetHTML += '<li class="">';
+                planetHTML += '<p class="image">' + planet.name + '</p>';
+                planetHTML += '<p>Terrain: ' + planet.terrain + '</p>';  
+                planetHTML += '<p>' + planet.population + '</p></li>';
                  }); // end each planets
             
-              photoHTML += '</ul>';
-              $('#photos').html(photoHTML);
+              planetHTML += '</ul>';
+              $('#planets').html(planetHTML);
               $searchField.prop('disabled', false);
               $submitButton.attr('disabled', false).val('Search');  
             }; //end displatNextPage
-            $.getJSON(nextPage, flickrOptions, displayNextPage);
+            $.getJSON(nextPage, planetOptions, displayNextPage);
         }
     }); //end button prev
  

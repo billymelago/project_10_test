@@ -1,6 +1,6 @@
 $(document).ready(function() {
 
-
+    
  $('form').submit(function (evt) {
    evt.preventDefault();
    $searchField = $('#search'); 
@@ -18,7 +18,7 @@ $(document).ready(function() {
     };
      console.log(planetAPI);
     function displayPlanets(data) {
-      var planetHTML = '<ul>';
+      var planetHTML;
       $.each(data.results,function(i,planet) {
         planetHTML += '<li class="">';
         planetHTML += '<p class="image">' + planet.name + '</p>';
@@ -28,21 +28,24 @@ $(document).ready(function() {
         if(planet.films.length > 0) {
             var movieAPI = planet.films;
             
-           // function displayMovies(movie_data) {
+            function displayMovies(movie_data) {
                 planetHTML += '<h6>Movie Apperances</h6>';
                 planetHTML += '<ul>';
-                $.each(planet.films, function(i,movies) {
-                    planetHTML += '<li>' + movies.opening_crawl + '</li>';
+                $.each(movie_data, function(i,movies) {
+                    planetHTML += '<li>' + movies.title + '</li>';
                     
                     console.log(movies.title);
+                    
                 }); //end each movies
-                planetHTML += '</ul>';
+                
                 $('#planets').html(planetHTML);
-           // }; //end displayMovies() 
+                
+            }; //end displayMovies() 
+            
         } else {
             console.log('No info here!');
         }
-       // $.getJSON(movieAPI, planetOptions, displayMovies);
+        $.getJSON(planet.films, displayMovies);
           
       }); // end each planets
             
@@ -53,7 +56,7 @@ $(document).ready(function() {
     }; //end displayPlanets() 
     $.getJSON(planetAPI, planetOptions, displayPlanets);
 
-     $('#next').click(function() {
+    $('#next').click(function() {
         if(f < 7) {
             $('#planets').html();
             f++;
@@ -97,10 +100,38 @@ $(document).ready(function() {
               $submitButton.attr('disabled', false).val('Search');  
             }; //end displatNextPage
             $.getJSON(nextPage, planetOptions, displayNextPage);
-        }
-    }); //end button prev
+        }//end if
+      }); //end button prev
  
-  }); // end click
+    }); // end click
+    
+    
+    
+    
+    $.getJSON('https://swapi.co/api/films/', function films(data){
+        var Allfilms = '<ul>';
+        $.each(data.results, function(i, filmData) {
+            var Ourfilms = filmData.title;
+            var characters = filmData.characters;
+            
+            $.getJSON(characters, function people(p_data) {
+               var AllPeople = '<ul>';
+                $.each(p_data.results, function(i, person) {
+                    var name= person.name;
+                    AllPeople += '<li>' + name + '</li>';
+                    AllPeople += '</ul>';
+                    $('#planets').html(AllPeople);
+                }); //end $.each(,person)
+            }); //end $.getJSON(,people(p_data))
+            
+            
+            Allfilms += '<li>' + Ourfilms + '</li>';
+            Allfilms += '</ul>'
+            $('#planets').html(Allfilms);
+            console.log(Ourfilms);
+        });// end $.each(,filmData)
+        
+    });//end $.getJSON(,film(data))  
     
     
 }); // end ready
